@@ -1,25 +1,32 @@
 # LePoKet: Learnable Parameter Optimization for Knowledge Transfer
 
-Official PyTorch implementation of **LePoKet (Learnable Parameter Optimization
-for Knowledge Transfer)**, a framework for learning how knowledge is transferred
-from a pretrained parent network to a compact child network.
+Official PyTorch implementation of **LePoKet**, introduced in:
 
-LePoKet builds on **Hereditary Knowledge Transfer (HKT)** by replacing fixed
-parent-child interactions with learnable transfer parameters. Knowledge
-inheritance is integrated directly into the forward computation through a
-block-wise **Extract-Transform-Mix (ETM)** interface and a
+> **Can Knowledge Transfer Parameters Be Learned? LePoKet for Efficient Robotic Vision**  
+> Yanick C. Tchenko, Felix Mohr, Hicham Hadj-Abdelkader, Hedi Tabia  
+> arXiv:2609.16637, 2026
+
+📄 **Paper:** https://arxiv.org/abs/2609.16637
+
+LePoKet is a structural knowledge-transfer framework that learns how
+knowledge should be inherited from a pretrained parent network by a
+compact child network.
+
+Building on **Hereditary Knowledge Transfer (HKT)**, LePoKet introduces
+learnable parent-child interactions through a block-wise
+**Extract-Transform-Mix (ETM)** interface and a
 **Learnable Genetic Attention (LGA)** operator.
 
-The framework is evaluated on image classification using CIFAR-10/CIFAR-100
-with ResNet parent-child architectures, and on dense motion estimation using
-compact RAFT-based optical flow.
+Unlike conventional knowledge distillation, LePoKet embeds knowledge
+inheritance directly into the forward computation and does not require
+auxiliary distillation losses or temperature scaling.
 
-## Main Results
+## Results
 
 ### Image Classification
 
 | Method | Dataset | Accuracy |
-|--------|---------|----------|
+|---|---:|---:|
 | ResNet-20 baseline | CIFAR-10 | 91.25% |
 | HKT | CIFAR-10 | 92.40% |
 | **LePoKet** | **CIFAR-10** | **93.40%** |
@@ -31,67 +38,44 @@ compact RAFT-based optical flow.
 Models are trained only on FlyingChairs + FlyingThings3D (C+T).
 
 | Method | Sintel Clean EPE | Sintel Final EPE | KITTI EPE |
-|--------|-----------------:|-----------------:|----------:|
-| Compact RAFT baseline | 2.21 | 3.35 | 7.51 |
+|---|---:|---:|---:|
+| Compact RAFT | 2.21 | 3.35 | 7.51 |
 | 2HKT-RAFT | 1.91 | 3.03 | 7.37 |
 | 3HKT-RAFT | 1.90 | 3.08 | 6.45 |
 | **LePoKet** | **1.92** | **3.01** | **6.39** |
 
 ## Repository Structure
 
-The main components include:
-
-- `learnable_ga.py` - Learnable Genetic Attention module
-- `resnet_lga.py` - ResNet integration of LePoKet/LGA
-- `trainer_lga.py` - training pipeline for LePoKet
-- `trainer.py` - standard baseline training
-- `trainer_hktcifar100.py` - HKT-based CIFAR-100 training
-- `eval.py` - model evaluation
-- `pretrained_models/` - pretrained model checkpoints
+- `learnable_ga.py` - Learnable Genetic Attention
+- `resnet_lga.py` - LePoKet/LGA integration for ResNet
+- `trainer_lga.py` - LePoKet training pipeline
+- `trainer.py` - baseline training
+- `trainer_hktcifar100.py` - HKT CIFAR-100 training
+- `eval.py` - evaluation
+- `pretrained_models/` - pretrained checkpoints
 - `run.sh` - training launcher
 
-## Running the Code
+## Installation
 
 Clone the repository:
 
     git clone https://github.com/christian-tchenko/LePoKet.git
     cd LePoKet
 
-Then run:
-
-    chmod +x run.sh
-    ./run.sh
-
-## Method
-
-Given a frozen parent network and a compact child network, LePoKet learns
-the parameters controlling parent-child knowledge transfer jointly with
-the child model.
-
-Unlike conventional knowledge distillation, LePoKet does not require
-teacher-logit matching, auxiliary feature-matching losses, or temperature
-scaling. The transfer mechanism is optimized directly from the downstream
-task objective.
-
 ## HKT
 
-LePoKet extends **Hereditary Knowledge Transfer (HKT)**.
+LePoKet builds upon **Hereditary Knowledge Transfer (HKT)**:
 
-HKT implementation:
 https://github.com/christian-tchenko/HKT-ResNet
-
-## Paper
-
-**Can Knowledge Transfer Parameters Be Learned? LePoKet for Efficient Robotic Vision**
-
-Yanick C. Tchenko, Felix Mohr, Hicham H. Abdelkader, Hedi Tabia
-
-arXiv link: coming soon.
 
 ## Citation
 
-The BibTeX citation will be added when the arXiv identifier is available.
+If you find LePoKet useful in your research, please cite:
 
-## License
-
-See the `LICENSE` file for details.
+```bibtex
+@article{tchenko2026lepoket,
+  title={Can Knowledge Transfer Parameters Be Learned? LePoKet for Efficient Robotic Vision},
+  author={Tchenko, Yanick C. and Mohr, Felix and Hadj-Abdelkader, Hicham and Tabia, Hedi},
+  journal={arXiv preprint arXiv:2609.16637},
+  year={2026}
+}
